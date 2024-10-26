@@ -1,0 +1,51 @@
+[gd_scene load_steps=5 format=3 uid="uid://dlaswr855bqux"]
+
+[ext_resource type="Texture2D" uid="uid://cgqol305d8ek8" path="res://ASS/spear/spear_07.png" id="1_lmnl1"]
+[ext_resource type="Script" path="res://scripts/javelin.gd" id="1_ym41s"]
+[ext_resource type="AudioStream" uid="uid://cx60qlxawbmer" path="res://ASS/sounds/swoosh-sound-effect-for-fight-scenes-or-transitions-2-149890.mp3" id="3_1dbqs"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_crhqa"]
+size = Vector2(42.109, 3.9094)
+
+[node name="Javelin" type="Area2D" groups=["attack"]]
+top_level = true
+rotation = 0.330995
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("1_ym41s")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(-3.57628e-07, -4.76837e-07)
+rotation = 2.80007
+scale = Vector2(0.293362, 0.997474)
+texture = ExtResource("1_lmnl1")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(1.42109e-14, 7.10543e-15)
+rotation = 1.45696
+shape = SubResource("RectangleShape2D_crhqa")
+disabled = true
+
+[node name="AttackTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 5.0
+one_shot = true
+autostart = true
+
+[node name="ChangeDirectionTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+
+[node name="ResetPosTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 3.0
+autostart = true
+
+[node name="snd_attack" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_1dbqs")
+volume_db = -9.52
+pitch_scale = 0.59
+autoplay = true
+
+[connection signal="timeout" from="AttackTimer" to="." method="_on_attack_timer_timeout"]
+[connection signal="timeout" from="ChangeDirectionTimer" to="." method="_on_change_direction_timer_timeout"]
+[connection signal="timeout" from="ResetPosTimer" to="." method="_on_reset_pos_timer_timeout"]

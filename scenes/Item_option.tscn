@@ -1,0 +1,102 @@
+[gd_scene load_steps=4 format=3 uid="uid://ba6qim5bw74yg"]
+
+[ext_resource type="FontFile" uid="uid://fwejx5l408g5" path="res://ASS/font/fonts/PixelOperator8-Bold.ttf" id="2_g2ep5"]
+[ext_resource type="Texture2D" uid="uid://ch1dgjgcne3um" path="res://ASS/spear/spear_08.png" id="2_s0s6v"]
+
+[sub_resource type="GDScript" id="GDScript_50uet"]
+script/source = "extends ColorRect
+ 
+@onready var lblName = $lbl_name
+@onready var lbl_description = $lbl_descreption
+@onready var lbl_level = $lbl_level
+@onready var itemIcon = $ColorRect/itemIcon
+
+var mouse_over = false
+var item = null
+@onready var player = get_tree().get_first_node_in_group(\"player\")
+
+signal selected_upgrade(upgrade)
+
+func _ready():
+	connect(\"selected_upgrade\",Callable(player,\"upgradeCharacter\"))
+	if item == null:
+		item = \"food\"
+	lblName.text = UpgradeDb.UPGRADES[item][\"displayname\"]
+	lbl_description.text = UpgradeDb.UPGRADES[item][\"details\"]
+	lbl_level.text = UpgradeDb.UPGRADES[item][\"level\"]
+	itemIcon.texture = load(UpgradeDb.UPGRADES[item][\"icon\"])
+	
+func _input(event):
+	if event.is_action(\"click\"):
+		if mouse_over:
+			emit_signal(\"selected_upgrade\",item)
+
+func _on_mouse_entered():
+	mouse_over = true
+
+
+func _on_mouse_exited():
+	mouse_over = false
+"
+
+[node name="Item_Option" type="ColorRect"]
+custom_minimum_size = Vector2(180, 60)
+anchors_preset = -1
+anchor_right = 0.156
+anchor_bottom = 0.077
+offset_right = 0.287994
+offset_bottom = 6.104
+color = Color(0.548963, 0.548963, 0.548963, 1)
+script = SubResource("GDScript_50uet")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 26.0
+offset_bottom = 26.0
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="itemIcon" type="TextureRect" parent="ColorRect"]
+layout_mode = 0
+offset_right = 32.0
+offset_bottom = 32.0
+scale = Vector2(0.75, 0.75)
+mouse_filter = 2
+texture = ExtResource("2_s0s6v")
+
+[node name="lbl_name" type="Label" parent="."]
+layout_mode = 0
+offset_left = 31.0
+offset_top = 2.0
+offset_right = 97.0
+offset_bottom = 25.0
+theme_override_fonts/font = ExtResource("2_g2ep5")
+theme_override_font_sizes/font_size = 8
+text = "Name"
+horizontal_alignment = 1
+
+[node name="lbl_descreption" type="Label" parent="."]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 26.0
+offset_right = 179.0
+offset_bottom = 42.0
+theme_override_fonts/font = ExtResource("2_g2ep5")
+theme_override_font_sizes/font_size = 6
+text = "Description of item"
+autowrap_mode = 3
+
+[node name="lbl_level" type="Label" parent="."]
+layout_mode = 0
+offset_left = 122.0
+offset_top = 3.0
+offset_right = 176.0
+offset_bottom = 26.0
+theme_override_fonts/font = ExtResource("2_g2ep5")
+theme_override_font_sizes/font_size = 8
+text = "Level  1"
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
